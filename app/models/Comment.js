@@ -10,7 +10,7 @@ const Comment = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'post'
 	},
-	comment: String
+	comment: String 
 })
-
+ 
 module.exports = mongoose.model('comment', Comment)

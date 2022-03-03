@@ -3,7 +3,8 @@ const Comment = require('../models/Comment')
 function CommentControllers() {
 	this.getComments = async function(req,res) {
 		const postId = req.params.id
-		const comment = await Comment.find({postId})
+		// console.log()
+		const comment = await Comment.find({postId}).populate('userId')
 		try {
 			res.json(comment)
 		} catch(err) {
@@ -17,7 +18,7 @@ function CommentControllers() {
 			commentItem.save()
 			res.json({
 				success: true,
-				commentItem 
+				commentItem
 			})
 		} catch(err) {
 			return res.json(err)

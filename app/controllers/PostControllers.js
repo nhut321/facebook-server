@@ -6,7 +6,7 @@ function PostControllers() {
 		const { description, userId } = req.body
 		const post = new Post({description, userId})
 		try {
-			post.save()
+			post.save() 
 			res.json({
 				success: true,
 				data: post
@@ -30,6 +30,18 @@ function PostControllers() {
 
 		} catch(err) {
 
+		}
+	}
+	this.getOnePost = async function(req,res) {
+		const postId = req.params.id
+		try {
+			const post = await Post.findOne({_id: postId}).populate('userId')
+			return res.json({
+				success: true,
+				data: post
+			})
+		} catch(err) {
+			return res.json(err)
 		}
 	}
 }
