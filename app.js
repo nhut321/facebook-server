@@ -3,6 +3,10 @@ const cors = require('cors')
 const express = require('express')
 const app = express()
 const port = process.env.PORT
+const http = require('http')
+const server = http.createServer(app)
+const { Server } = require('socket.io')
+const io = new Server(server)
 const router = require('./router')
 
 app.use(cors())
@@ -16,4 +20,4 @@ connect()
 
 router(app)
 
-app.listen(port, () => console.log('Server connected at port: ' + port))
+server.listen(port, () => console.log('Server connected at port: ' + port))

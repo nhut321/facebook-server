@@ -13,7 +13,12 @@ function AuthControllers() {
 		try {
 			bcrypt.compare("baconsoi", user.password, function(err, result) {
 			    if (password == result) {
-			    	const token = jwt.sign({email: user.email, userId: user._id, verified: user.verified}, process.env.KEY)
+			    	const token = jwt.sign({
+			    		email: user.email, 
+			    		userId: user._id, 
+			    		verified: user.verified,
+			    		fullName: user.fullName
+			    	}, process.env.KEY)
 			    	return res.json({
 			    		success: true,
 			    		user,
@@ -51,7 +56,20 @@ function AuthControllers() {
 				res.json(err)
 			}
 		}
-
+	}
+	this.getUser = async function(req,res) {
+		const user = await User.findOne({_id: req.params.id})
+		try {
+			res.json({
+				success: true,
+				user
+			})
+		} catch(err) {
+			res.json({
+				success: false,
+				error: err
+			})
+		}
 	}
 }
 
