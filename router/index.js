@@ -12,7 +12,7 @@ function router(app) {
 			success: true,
 			message: 'Authenticated!',
 			user: req.userId
-			// verified: req.userId.verified 
+			// verified: req.userId.verified  
 		})
 	})
 }
