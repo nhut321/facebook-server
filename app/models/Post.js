@@ -7,7 +7,10 @@ const Post = new Schema({
 		ref: 'user'
 	},
 	description: String,
-	like: String,
+	like: {
+		type: Array,
+		default: []
+	}
 })
 
 module.exports = mongoose.model('post', Post)

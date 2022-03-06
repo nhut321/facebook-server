@@ -21,8 +21,6 @@ function PostControllers() {
 	this.getPost = async function(req,res) {
 		try {
 			const posts = await Post.find({}).populate('userId')
-
-			// console.log(posts)
 			res.json({
 				success: true,
 				data: posts
@@ -43,6 +41,27 @@ function PostControllers() {
 		} catch(err) {
 			return res.json(err)
 		}
+	}
+	this.getPostUser = async function(req,res) {
+		const userId = req.params.id
+		try {
+			const post = await Post.find({userId: userId}).populate('userId')
+			return res.json({
+				success: true,
+				data: post
+			})
+		} catch(err) {
+			return res.json(err)
+		}
+	}
+	this.likePost = async function(req,res) {
+		const { userId } = req.body
+		const { postId } = req.params.id 
+		Post.update({
+			$push: {like: userId}
+		}).then(result => {
+			return res.json(result)
+		})
 	}
 }
 

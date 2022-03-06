@@ -13,7 +13,7 @@ function AuthControllers() {
 		try {
 			bcrypt.compare("baconsoi", user.password, function(err, result) {
 			    if (password == result) {
-			    	const token = jwt.sign({email: user.email, userId: user._id}, process.env.KEY)
+			    	const token = jwt.sign({email: user.email, userId: user._id, verified: user.verified}, process.env.KEY)
 			    	return res.json({
 			    		success: true,
 			    		user,
