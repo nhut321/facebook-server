@@ -27,7 +27,7 @@ function PostControllers() {
 			})
 
 		} catch(err) {
-
+			return res.json(err)
 		}
 	}
 	this.getOnePost = async function(req,res) {
