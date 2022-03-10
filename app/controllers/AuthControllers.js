@@ -61,15 +61,26 @@ function AuthControllers() {
 		}
 	}
 	this.getUser = async function(req,res) {
-		const user = await User.findOne({_id: req.params.id}).populate('following')
-		console.log(user)
 		try {
-			res.json({
+			const user = await User.findOne({_id: req.params.id})
+			const friends = await Promise.all(
+				user.following.map(v => {
+					return User.findById(v)
+				})
+			)
+			let friendList = []
+			friends.map(friend => {
+				const { _id, fname, lname, avatar } = friend
+				friendList.push({ _id, fname, lname, avatar })
+			})
+			
+			return res.json({
 				success: true,
+				friends: friendList,
 				user
 			})
 		} catch(err) {
-			res.json({
+			return res.json({
 				success: false,
 				error: err
 			})
@@ -84,10 +95,10 @@ function AuthControllers() {
 			const currentUser = await User.findById({_id: currentId})
 			if(!user.follower.includes(currentId)) {
 				await user.updateOne({
-					$push: {follower: currentUser._id}
+					$push: {follower: currentId}
 				})
 				await currentUser.updateOne({
-					$push: {following: user._id}
+					$push: {following: userId}
 				})
 				return res.json({
 					success: true,
@@ -107,7 +118,6 @@ function AuthControllers() {
 		try {
 			const user = await User.findById({_id: req.params.id})
 			const currentUser = await User.findById({_id: req.body.currentId})
-			console.log(user.follower.includes(currentUser._id))
 			if(user.follower.includes(req.body.currentId)) {
 				await user.updateOne({
 					$pull: {follower: req.body.currentId}

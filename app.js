@@ -20,9 +20,9 @@ app.use(express.json())
 
 const { connect } = require('./config/data')
 
-io.on('connection', (socket) => {
-	socket.emit('connecting', 'server')
-})  
+// io.on('connection', (socket) => {  
+// 	socket.on('connecting', user => console.log('welcome to ' + user))
+// })  
   
 connect()
 
