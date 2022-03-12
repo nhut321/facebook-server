@@ -20,19 +20,33 @@ app.use(express.json())
 
 const { connect } = require('./config/data')
 
-const userSocket = []
+let userOnline = [] 
+
+const addUser = (username, socketId) => {
+	!userOnline.some(user => user.username === username) &&
+	userOnline.push({username, socketId})
+}
+
+const removeUser = (socketId) => {
+	userOnline = userOnline.filter(user => user.socketId !== socketId)
+}
+
+const getUser = (username) => {
+	return userOnline.find(user => user.username === username)
+}
 
 io.on('connection', (socket) => {
-	userSocket.push(socket.id)
-	socket.on('online', user => {
-		io.sockets.emit('server-req-online', {userId: socket.id, user: user}) 
+	console.log(socket.id + ' vua ket noi')
+	socket.on('online', (username, socketId) => {
+		addUser(username, socketId)
+		io.sockets.emit('server-req-online', {userId: socket.id, username}) 
 	})
-	socket.on('follow-noti', data => {
-		console.log(userSocket)
-		io.to(data.targetUser).emit('follow-noti-to-client', data)
+	socket.on('follow-noti', (targetUser, myUser) => {
+		io.to(getUser(targetUser).socketId).emit('follow-noti-to-client', myUser)
 	})
 	socket.on('disconnect', user => {
-		console.log('co nguoi disconnect: ' + socket.id)
+		removeUser(socket.id)
+		console.log(userOnline)
 		io.sockets.emit('user-disconect', socket.id)
 	})
 })  
