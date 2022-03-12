@@ -11,7 +11,7 @@ const io = new Server(server, {
 		origin: 'http://localhost:3000'
 	}
 })
-const router = require('./router')
+const router = require('./router') 
 
 app.use(cors())
 
@@ -20,9 +20,22 @@ app.use(express.json())
 
 const { connect } = require('./config/data')
 
-// io.on('connection', (socket) => {  
-// 	socket.on('connecting', user => console.log('welcome to ' + user))
-// })  
+const userSocket = []
+
+io.on('connection', (socket) => {
+	userSocket.push(socket.id)
+	socket.on('online', user => {
+		io.sockets.emit('server-req-online', {userId: socket.id, user: user}) 
+	})
+	socket.on('follow-noti', data => {
+		console.log(userSocket)
+		io.to(data.targetUser).emit('follow-noti-to-client', data)
+	})
+	socket.on('disconnect', user => {
+		console.log('co nguoi disconnect: ' + socket.id)
+		io.sockets.emit('user-disconect', socket.id)
+	})
+})  
   
 connect()
 

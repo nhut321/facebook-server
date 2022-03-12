@@ -9,7 +9,6 @@ function AuthControllers() {
 		if (!user) {
 			return res.json('Email not exists!')
 		}
-		console.log(user.fname)
 		try {
 			bcrypt.compare(password,user.password, function(err, result) {
 			    if (result) {
@@ -70,8 +69,8 @@ function AuthControllers() {
 			)
 			let friendList = []
 			friends.map(friend => {
-				const { _id, fname, lname, avatar } = friend
-				friendList.push({ _id, fname, lname, avatar })
+				const { id: _id, fname, lname, avatar } = friend
+				friendList.push({ id:_id, fname, lname, avatar })
 			})
 			
 			return res.json({
@@ -89,7 +88,6 @@ function AuthControllers() {
 	this.follow = async function(req,res) {
 		const userId = req.params.id
 		const { currentId } = req.body
-		console.log(req.params.id)
 		try {
 			const user = await User.findById({_id: userId})
 			const currentUser = await User.findById({_id: currentId})
