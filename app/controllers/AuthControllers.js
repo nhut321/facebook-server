@@ -1,6 +1,6 @@
-const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const User = require('../models/User')
 
 function AuthControllers() {
 	this.login = async function(req,res) {
@@ -91,9 +91,24 @@ function AuthControllers() {
 		try {
 			const user = await User.findById({_id: userId})
 			const currentUser = await User.findById({_id: currentId})
+			// console.log()
+			if(!user.notification.some(item => item.userId === currentId)) {
+				await user.updateOne({
+					$push: {
+						notification: {
+							userId: currentId,
+							username: currentUser.fullName,
+							notifi_type: 'follow',
+							message: ' Đã theo dõi bạn'
+						}
+					}
+				})
+			}
 			if(!user.follower.includes(currentId)) {
 				await user.updateOne({
-					$push: {follower: currentId}
+					$push: {
+						follower: currentId
+					}
 				})
 				await currentUser.updateOne({
 					$push: {following: userId}
@@ -123,6 +138,11 @@ function AuthControllers() {
 				await currentUser.updateOne({
 					$pull: {following: req.params.id}
 				})
+				if (user.notification.some(item => item.userId === req.body.currentId)) {
+					await user.updateOne({
+						$pull: {notification: {userId: req.body.currentId}}
+					})
+				}
 				return res.json({
 					success: true,
 					message: 'You has been unfollow user!!!',

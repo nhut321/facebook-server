@@ -37,17 +37,21 @@ const getUser = (username) => {
 
 io.on('connection', (socket) => {
 	console.log(socket.id + ' vua ket noi')
-	socket.on('online', (username, socketId) => {
-		addUser(username, socketId)
-		io.sockets.emit('server-req-online', {userId: socket.id, username}) 
+	socket.on('online', (username) => {
+		addUser(username, socket.id)
+		io.sockets.emit('server-req-online', username) 
 	})
-	socket.on('follow-noti', (targetUser, myUser) => {
-		io.to(getUser(targetUser).socketId).emit('follow-noti-to-client', myUser)
+	socket.on('follow-user', (username) => {
+		getUser(username)
+		if(getUser(username)) {
+			io.to(getUser(username).socketId).emit('follow-res','cos nguoi vua moi follow kia')
+		} else {
+			return
+		}
 	})
 	socket.on('disconnect', user => {
-		removeUser(socket.id)
-		console.log(userOnline)
-		io.sockets.emit('user-disconect', socket.id)
+		removeUser(user)
+		io.sockets.emit('user-disconect', socket.id) 
 	})
 })  
   
