@@ -22,9 +22,9 @@ const { connect } = require('./config/data')
 
 let userOnline = [] 
 
-const addUser = (username, socketId) => {
+const addUser = (username,fname, socketId) => {
 	!userOnline.some(user => user.username === username) &&
-	userOnline.push({username, socketId})
+	userOnline.push({username,fname, socketId})
 }
 
 const removeUser = (socketId) => {
@@ -37,12 +37,15 @@ const getUser = (username) => {
 
 io.on('connection', (socket) => {
 	console.log(socket.id + ' vua ket noi')
-	socket.on('online', (username) => {
-		addUser(username, socket.id)
-		io.sockets.emit('server-req-online', username) 
+	socket.on('online', (username,fname) => {
+		addUser(username,fname, socket.id)
+		// const result = getUser()
+		console.log(userOnline)
+		io.sockets.emit('server-req-online', userOnline)
 	})
 	socket.on('follow-user', (username) => {
 		getUser(username)
+		// io.to(getUser(username).socketId).emit('follow-res','cos nguoi vua moi follow kia')
 		if(getUser(username)) {
 			io.to(getUser(username).socketId).emit('follow-res','cos nguoi vua moi follow kia')
 		} else {
@@ -50,7 +53,7 @@ io.on('connection', (socket) => {
 		}
 	})
 	socket.on('disconnect', user => {
-		removeUser(user)
+		removeUser(socket.id)
 		io.sockets.emit('user-disconect', socket.id) 
 	})
 })  
