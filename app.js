@@ -40,7 +40,6 @@ io.on('connection', (socket) => {
 	socket.on('online', (username,fname) => {
 		addUser(username,fname, socket.id)
 		// const result = getUser()
-		console.log(userOnline)
 		io.sockets.emit('server-req-online', userOnline)
 	})
 	socket.on('follow-user', (username) => {
