@@ -51,6 +51,13 @@ io.on('connection', (socket) => {
 			return
 		}
 	})
+	socket.on('send-message', data => {
+		const user = getUser(data.userGetMessage)
+		console.log(user)
+		if(user){
+			socket.to(user.socketId).emit('message-res', data)
+		}
+	})
 	socket.on('disconnect', user => {
 		removeUser(socket.id)
 		io.sockets.emit('user-disconect', socket.id) 
