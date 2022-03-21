@@ -9,6 +9,7 @@ const { Server } = require('socket.io')
 const io = new Server(server, {
 	cors: {
 		origin: 'http://localhost:3000'
+		// origin: 'https://relaxed-tesla-197163.netlify.app'
 	}
 })
 const router = require('./router') 
@@ -42,6 +43,7 @@ io.on('connection', (socket) => {
 		// const result = getUser()
 		io.sockets.emit('server-req-online', userOnline)
 	})
+
 	socket.on('follow-user', (username) => {
 		getUser(username)
 		// io.to(getUser(username).socketId).emit('follow-res','cos nguoi vua moi follow kia')
@@ -51,6 +53,7 @@ io.on('connection', (socket) => {
 			return
 		}
 	})
+
 	socket.on('send-message', data => {
 		const user = getUser(data.userGetMessage)
 		console.log(user)
@@ -58,9 +61,27 @@ io.on('connection', (socket) => {
 			socket.to(user.socketId).emit('message-res', data)
 		}
 	})
+
 	socket.on('disconnect', user => {
 		removeUser(socket.id)
+		console.log(user)
 		io.sockets.emit('user-disconect', socket.id) 
+	})
+
+	socket.on('on-typing', data => {
+		const socketId = getUser(data.receiverId)
+		console.log(socketId)
+		if(socketId) {
+			socket.to(socketId.socketId).emit('server-sending-on-typing')
+		}
+	})
+
+	socket.on('blur-typing', data => {
+		const socketId = getUser(data.receiverId)
+		console.log(socketId)
+		if(socketId) {
+			socket.to(socketId.socketId).emit('server-sending-on-blur-typing')
+		}
 	})
 })  
   

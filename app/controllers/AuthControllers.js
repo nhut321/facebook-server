@@ -38,7 +38,7 @@ function AuthControllers() {
 		}
 	}
 	this.register = async function(req,res) {
-		let { email, password, fullName } = req.body
+		let { email, password, fname, lname } = req.body
 		const user = await User.findOne({email})
 
 		if(user) {
@@ -49,9 +49,9 @@ function AuthControllers() {
 				bcrypt.genSalt(10, function(err, salt) {
 				    bcrypt.hash(password, salt, function(err, hash) {
 				        password = hash
-						const user1 = new User({email,password,fullName})
+						const user1 = new User({email,password,fname,lname})
 						user1.save()
-						res.json(user1)
+						res.json(user1.fname)
 				    });
 				});
 			} catch(err) {

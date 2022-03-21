@@ -3,16 +3,13 @@ const Schema = mongoose.Schema
 
 const User = new Schema({
 	fullName: {
-		type: String,
-		trim: true
+		type: String
 	},
 	fname: {
-		type: String,
-		trim: true
+		type: String
 	},
 	lname: {
-		type: String,
-		trim: true
+		type: String
 	},
 	avatar: {
 		type: String,
