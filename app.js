@@ -8,8 +8,7 @@ const server = http.createServer(app)
 const { Server } = require('socket.io')
 const io = new Server(server, {
 	cors: {
-		origin: 'http://localhost:3000'
-		// origin: 'https://relaxed-tesla-197163.netlify.app'
+		origin: ['http://localhost:3000', 'https://relaxed-tesla-197163.netlify.app']
 	}
 })
 const router = require('./router') 
