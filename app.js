@@ -86,6 +86,6 @@ io.on('connection', (socket) => {
   
 connect()
 
-router(app)
+router(app) 
 
 server.listen(port, () => console.log('Server connected at port: ' + port))
