@@ -97,7 +97,7 @@ function AuthControllers() {
 					$push: {
 						notification: {
 							userId: currentId,
-							username: currentUser.fullName,
+							username: currentUser.fname,
 							notifi_type: 'follow',
 							message: ' Đã theo dõi bạn'
 						}

@@ -8,7 +8,7 @@ function SearchControllers() {
 			user = user.slice(0,5)
 			res.json(user)
 		} catch(err) {
-			res.json(err)
+			res.json(err) 
 		}
 	}
 }
