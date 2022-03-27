@@ -19,11 +19,23 @@ function PostControllers() {
 		}
 	}
 	this.getPost = async function(req,res) {
+		const {userId} = req.body
 		try {
-			const posts = await Post.find({}).populate('userId')
+			const user = await User.find({
+				_id: userId
+			})
+			const posts = []
+			const friends = user[0].following
+			friends.forEach(async item => {
+				const post = await Post.find({
+					userId: item
+				}).populate('userId')
+				posts.push(post)
+			})
 			res.json({
 				success: true,
-				data: posts
+				data: posts,
+				user: user[0].following
 			})
 
 		} catch(err) {
