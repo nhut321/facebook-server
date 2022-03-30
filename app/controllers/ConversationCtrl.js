@@ -2,9 +2,9 @@ const Conversation = require('../models/Conversation')
 
 function ConversationCtrl() {
 	this.createConversation = async (req,res) => {
-		const { senderId, receiverId } = req.body
-		const conversation = await Conversation.find({member: [req.body.senderId, req.body.receiverId]}) 
-		if(!conversation){
+		const conversation = await Conversation.find({member: [req.body.senderId, req.body.receiverId]})
+		console.log(conversation)
+		if(conversation.length <= 0){
 			try {
 				const newConversation = new Conversation({
 					member: [
@@ -12,9 +12,13 @@ function ConversationCtrl() {
 						req.body.receiverId
 					]
 				})
-				await conversation.save()
-				res.json(conversation)
-			} catch(err) {
+				await newConversation.save()
+
+				res.json({
+					success: true,
+					newConversation
+				})
+			} catch(err) { 
 				res.json({
 					success: false,
 					message: err
@@ -23,7 +27,8 @@ function ConversationCtrl() {
 		} else {
 			res.json({
 				success: false,
-				message: 'Conversation already exist'
+				message: 'Conversation already exist',
+				conversation
 			})
 		}
 	}
