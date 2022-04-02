@@ -3,8 +3,8 @@ const User = require('../models/User')
 
 function PostControllers() {
 	this.createPost = async function(req,res) {
-		const { description, userId } = req.body
-		const post = new Post({description, userId})
+		const { description, userId, imageUrl } = req.body
+		const post = new Post({description, userId, imageUrl})
 		try {
 			post.save() 
 			res.json({
@@ -21,7 +21,7 @@ function PostControllers() {
 	this.getPost = async function(req,res) {
 		try {
 			const posts = await Post.find({}).populate('userId')
-			res.json({
+			return res.json({
 				success: true,
 				data: posts
 			})
@@ -62,6 +62,26 @@ function PostControllers() {
 		}).then(result => {
 			return res.json(result)
 		})
+	}
+	this.getFriendPost = async function(req,res) {
+		const myId = req.params.id
+		try {
+			const friendPosts = []
+			const user = await User.find({_id: myId})
+			const friendId = user[0].following
+			friendId.push(myId)
+			const post = await Post.find({userId: friendId}).populate('userId')
+			return res.json({
+				success: true,
+				data: post
+			})
+
+		} catch(err) {
+			return res.json({
+				success: false,
+				error: err
+			})
+		}
 	}
 }
 

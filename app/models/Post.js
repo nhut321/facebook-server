@@ -10,7 +10,8 @@ const Post = new Schema({
 	like: {
 		type: Array,
 		default: []
-	} 
+	},
+	imageUrl: String
 })
 
 module.exports = mongoose.model('post', Post)

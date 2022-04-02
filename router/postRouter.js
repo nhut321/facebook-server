@@ -5,6 +5,7 @@ router.post('/create/', postCtrl.createPost)
 router.get('/:id/', postCtrl.getOnePost)
 router.put('/:id/like', postCtrl.likePost)
 router.get('/user/:id', postCtrl.getPostUser)
+router.get('/friend-posts/:id', postCtrl.getFriendPost)
 router.get('/', postCtrl.getPost)
 
 module.exports = router
