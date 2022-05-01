@@ -158,6 +158,29 @@ function AuthControllers() {
 			return res.json(err)
 		}
 	}
+	this.profileEdit = async function(req,res) {
+		const { fname, lname, email, newPassword } = req.body
+		const userId = req.params.id
+		try {
+			const user = await User.findOne({_id: userId})
+			if(!user) {
+				res.json({message: 'User not found'})
+			} else {
+				await user.updateOne({
+					fname,
+					lname,
+					email
+				})
+				return res.json(user)
+			}
+		} catch(err) {
+			return res.json({
+				success: false,
+				error: err
+			})
+		}
+
+	}
 } 
 
 module.exports = new AuthControllers

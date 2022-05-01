@@ -14,6 +14,7 @@ function PostControllers() {
 		} catch(err) {
 			return res.json({
 				success: false,
+				data: [],
 				message: 'Create post error!'
 			})
 		}
@@ -48,7 +49,7 @@ function PostControllers() {
 			const post = await Post.find({userId: userId}).populate('userId')
 			return res.json({
 				success: true,
-				data: post
+				data: "Liked!"
 			})
 		} catch(err) {
 			return res.json(err)
@@ -56,12 +57,32 @@ function PostControllers() {
 	}
 	this.likePost = async function(req,res) {
 		const { userId } = req.body
-		const { postId } = req.params.id 
-		Post.update({
-			$push: {like: userId}
-		}).then(result => {
-			return res.json(result)
-		})
+		const postId = req.params.id 
+		const post = await Post.findOne({_id: postId})
+		if (!post.like.includes(userId)) {
+			await post.update({
+				$push: {
+					like: userId
+				}
+			})
+			return res.json({
+				success: true,
+				data: post
+			})
+		} else {
+			await post.update({
+				$pull: {
+					like: userId
+				}
+			})
+			return res.json({
+				success: false,
+				data: post,
+				message: 'Unlike success'
+			})
+		}
+
+
 	}
 	this.getFriendPost = async function(req,res) {
 		const myId = req.params.id
