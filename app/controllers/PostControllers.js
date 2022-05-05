@@ -49,7 +49,7 @@ function PostControllers() {
 			const post = await Post.find({userId: userId}).populate('userId')
 			return res.json({
 				success: true,
-				data: "Liked!"
+				data: post
 			})
 		} catch(err) {
 			return res.json(err)
@@ -67,22 +67,32 @@ function PostControllers() {
 			})
 			return res.json({
 				success: true,
+				message: 'Liked!',
 				data: post
 			})
 		} else {
+			return res.json({
+				success: false,
+				message: 'U already liked!'
+			})
+		}
+	}
+	this.unlikePost = async function(req,res) {
+		const { userId } = req.body
+		const postId = req.params.id 
+		const post = await Post.findOne({_id: postId})
+		if (post.like.includes(userId)) {
 			await post.update({
 				$pull: {
 					like: userId
 				}
 			})
 			return res.json({
-				success: false,
-				data: post,
-				message: 'Unlike success'
+				success: true,
+				message: 'unlike!',
+				data: post
 			})
 		}
-
-
 	}
 	this.getFriendPost = async function(req,res) {
 		const myId = req.params.id
