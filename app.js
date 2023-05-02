@@ -12,7 +12,7 @@ const io = new Server(server, {
 			'http://localhost:3000',
 			'https://relaxed-tesla-197163.netlify.app', 
 			'http://empty-web.tk',
-			'http://fakebook-app.tk'
+			'http://social-e.site'
 		]
 	}
 })
